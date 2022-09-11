@@ -1,48 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="style.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri App</title>
-    <script type="module" src="/main.js" defer></script>
-    <style>
-      .logo.vanilla:hover {
-        filter: drop-shadow(0 0 2em #ffe21c);
-      }
-    </style>
-  </head>
 
-  <body>
-    <div class="container">
-      <h1>Welcome to Tauri!</h1>
+<head>
+  <meta charset="utf-8">
+  <title>Minimalist Transcriber</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <div class="row">
-        <a href="https://tauri.app" target="_blank">
-          <img src="/assets/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a
-          href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-          target="_blank"
-        >
-          <img
-            src="/assets/javascript.svg"
-            class="logo vanilla"
-            alt="JavaScript logo"
-          />
-        </a>
-      </div>
+  <link rel="stylesheet" href="css/vendor/normalize.css">
+  <link rel="stylesheet" href="css/app.css">
 
-      <p>Click on the Tauri logo to learn more about the framework</p>
+  <meta name="theme-color" content="#fafafa">
+</head>
 
-      <div class="row">
-        <div>
-          <input id="greet-input" placeholder="Enter a name..." />
-          <button type="button" onclick="greet()">Greet</button>
-        </div>
-      </div>
+<body>
 
-      <p id="greet-msg"></p>
-    </div>
-  </body>
+  <div id="app" class="app">Hello world</div>
+
+  <script src="js/vendor/jquery-3.6.1.min.js"></script>
+  <script src="js/vendor/underscore-umd-1.13.4.min.js"></script>
+
+  <script src="js/lib/App.js"></script>
+  <script src="js/lib/MathUtil.js"></script>
+
+  <script src="js/main.js"></script>
+
+</body>
+
 </html>

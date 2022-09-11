@@ -4,7 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "lint": "./node_modules/.bin/eslint",
+    "start": "node server.js",
     "tauri": "tauri"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.0.5",
