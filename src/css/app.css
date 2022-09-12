@@ -67,8 +67,9 @@ li {
 .controls button:hover {
   background: #333;
 }
-.controls button:first-child {
-  border-left: none;
+.controls button:focus {
+  background: #630d0d;
+  outline: none;
 }
 .controls svg {
   width: 48px;
@@ -77,9 +78,29 @@ li {
 .controls svg path {
   fill: white;
 }
-.toggle-autostop svg {
-  transform-origin: 50% 50%;
-  transform: scale3d(0.8, 0.8, 1);
+.fileinput-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  z-index: 1000;
+  cursor: pointer;
+}
+.fileinput-wrapper button {
+  position: relative;
+  border-left: none;
+}
+.fileinput:hover ~ button {
+  background: #333;
+}
+.fileinput:focus ~ button {
+  background: #630d0d;
+  outline: none;
 }
 .progress-bar {
   flex-grow: 1;
