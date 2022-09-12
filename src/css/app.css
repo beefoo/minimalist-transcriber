@@ -1,6 +1,9 @@
 html {
-  font: 18px sans-serif;
+  font: 18px monospace;
   color: black;
+}
+body {
+  overflow: hidden;
 }
 
 a {
@@ -16,6 +19,90 @@ a:focus {
 p,
 li {
   line-height: 1.8;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.transcript {
+  flex-grow: 1;
+  position: relative;
+}
+.transcript-text {
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 1rem;
+  font-size: 1.4rem;
+  background: #ccc;
+  box-sizing: border-box;
+}
+.transcript-text:focus {
+  background: white;
+  outline: none;
+}
+.controls {
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  border-top: 2px solid black;
+}
+.controls button {
+  box-sizing: border-box;
+  background: black;
+  border: none;
+  border-left: 3px solid white;
+  cursor: pointer;
+}
+.controls button:hover {
+  background: #333;
+}
+.controls button:first-child {
+  border-left: none;
+}
+.controls svg {
+  width: 48px;
+  height: 48px;
+}
+.controls svg path {
+  fill: white;
+}
+.toggle-autostop svg {
+  transform-origin: 50% 50%;
+  transform: scale3d(0.8, 0.8, 1);
+}
+.progress-bar {
+  flex-grow: 1;
+}
+.time {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: ellipsis;
+}
+.active-off {
+  display: inline-block;
+}
+.active-on {
+  display: none;
+}
+.active .active-on {
+  display: inline-block;
+}
+.active .active-off {
+  display: none;
 }
 
 .visually-hidden {

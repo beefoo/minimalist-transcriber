@@ -14,7 +14,40 @@
 
 <body>
 
-  <div id="app" class="app">Hello world</div>
+  <div id="app" class="app">
+    <div class="transcript"><textarea id="transcript-text" class="transcript-text"></textarea></div>
+    <div class="controls">
+      <button class="open" title="Open file">
+        <span class="visually-hidden">Open file</span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M7.75 39q-1.05 0-1.9-.85Q5 37.3 5 36.25v-23.6q0-1.1.9-2 .9-.9 2-.9h12.7q.45 0 .875.2t.725.5l1.85 1.8H40.1q1 0 1.775.7.775.7.975 1.6h-32.7q-1.2 0-2.05.85-.85.85-.85 2v18.7q0 .25.125.375t.275.225l4.55-17.2q.2-.75.85-1.225.65-.475 1.4-.475H43.5q1.15 0 1.85.875.7.875.4 1.975L41.4 36.9q-.3 1.1-1.025 1.6-.725.5-1.875.5Z"/></svg>
+      </button>
+      <button class="toggle-play" title="Toggle play (Enter key)">
+        <span class="visually-hidden">Toggle play</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="active-off"><path d="M19.2 34.7q-.7.45-1.45.025T17 33.45v-19.1q0-.9.75-1.325.75-.425 1.45.075l15.05 9.6q.65.45.65 1.2t-.65 1.2Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="active-on"><path d="M28.95 37q-.9 0-1.575-.675-.675-.675-.675-1.575v-21.5q0-.9.675-1.575Q28.05 11 28.95 11h5.8q.9 0 1.575.675.675.675.675 1.575v21.5q0 .9-.675 1.575Q35.65 37 34.75 37Zm-15.7 0q-.9 0-1.575-.675Q11 35.65 11 34.75v-21.5q0-.9.675-1.575Q12.35 11 13.25 11h5.8q.9 0 1.6.675.7.675.7 1.575v21.5q0 .9-.7 1.575-.7.675-1.6.675Z"/></svg>
+      </button>
+      <div class="progress-bar">
+        <div class="progress"></div>
+        <div class="time">
+          <span class="current-time">--:--</span> / <span class="total-time">--:--</span>
+          <span class="filename">Open a file to start</span>
+        </div>
+      </div>
+      <button class="toggle-autostop active" title="Toggle auto-pause (Shift + enter key)">
+        <span class="visually-hidden">Toggle auto-pause</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="active-off"><path d="M35.05 34.65V27.8q0-.5.325-.825.325-.325.775-.325.5 0 .825.325.325.325.325.775v7.75q0 .65-.4 1.05t-1.05.4H11.3l3.65 3.65q.4.4.4.875T15 42.3q-.35.35-.8.35-.45 0-.8-.3L7.9 36.8q-.45-.4-.45-.975T7.9 34.8l5.45-5.45q.35-.35.825-.35t.825.35q.35.3.35.775 0 .475-.35.825l-3.7 3.7Zm-22.1-21.3v6.85q0 .5-.325.825-.325.325-.775.325-.5 0-.825-.325-.325-.325-.325-.775V12.5q0-.65.4-1.05t1.05-.4H36.7L33.05 7.4q-.35-.4-.375-.875Q32.65 6.05 33 5.7q.35-.3.8-.325.45-.025.8.275l5.5 5.55q.45.4.45.975T40.1 13.2l-5.45 5.45q-.35.35-.825.35T33 18.65q-.35-.35-.35-.8 0-.45.35-.8l3.7-3.7Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="active-on"><path d="M20.3 27.5q.5 0 .825-.325.325-.325.325-.825v-12.7q0-.5-.325-.825-.325-.325-.825-.325-.5 0-.825.325-.325.325-.325.825v12.7q0 .5.325.825.325.325.825.325Zm7.4 0q.5 0 .825-.325.325-.325.325-.825v-12.7q0-.5-.325-.825-.325-.325-.825-.325-.5 0-.825.325-.325.325-.325.825v12.7q0 .5.325.825.325.325.825.325ZM7.45 39.6q-.7.7-1.575.35T5 38.6V7.9q0-1.15.85-2.025T7.9 5h32.2q1.15 0 2.025.875T43 7.9v24.2q0 1.15-.875 2.025T40.1 35h-28Z"/></svg>
+      </button>
+      <button class="previous" title="Go back 5 seconds (Shift + tab key)">
+        <span class="visually-hidden">Go back 5 seconds</span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="m38.95 33.05-11.4-7.85q-.65-.45-.65-1.2t.65-1.2l11.4-7.85q.7-.5 1.475-.1.775.4.775 1.25v15.8q0 .85-.775 1.25t-1.475-.1Zm-18.95 0L8.6 25.2q-.65-.45-.65-1.2t.65-1.2L20 14.95q.7-.5 1.475-.1.775.4.775 1.25v15.8q0 .85-.775 1.25T20 33.05Z"/></svg>
+      </button>
+      <button class="next" title="Go forward 5 seconds (Tab key)">
+        <span class="visually-hidden">Go forward 5 seconds</span>
+        <svg xmlns="http://www.w3.org/2000/svg"><path d="M9 33.05q-.7.5-1.475.1-.775-.4-.775-1.25V16.1q0-.85.775-1.25t1.475.1l11.4 7.85q.65.45.65 1.2t-.65 1.2Zm19.15 0q-.75.5-1.5.1t-.75-1.25V16.1q0-.85.75-1.25t1.5.1l11.4 7.85q.65.45.65 1.2t-.65 1.2Z"/></svg>
+      </button>
+    </div>
+  </div>
 
   <script src="js/vendor/jquery-3.6.1.min.js"></script>
   <script src="js/vendor/underscore-umd-1.13.4.min.js"></script>
