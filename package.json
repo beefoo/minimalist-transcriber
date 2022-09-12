@@ -1,18 +1,14 @@
 {
   "name": "minimalist-transcriber",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "0.0.1",
   "scripts": {
     "lint": "./node_modules/.bin/eslint",
-    "start": "node server.js",
-    "tauri": "tauri"
+    "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.1"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.0.5",
     "eslint": "^7.25.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0"
