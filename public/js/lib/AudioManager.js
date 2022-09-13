@@ -6,8 +6,11 @@ class AudioManager {
   }
 
   init() {
-    this.sound = false;
-    this.loadListeners();
+    this.player = false;
+    this.isLoading = false;
+    this.$filename = $('.filename');
+    this.$currentTime = $('.current-time');
+    this.$totalTime = $('.total-time');
   }
 
   static formatSeconds(seconds) {
@@ -17,26 +20,29 @@ class AudioManager {
     return date.toISOString().substring(14, 19);
   }
 
-  loadListeners() {
-    $('#fileinput').on('change', (e) => this.onFileInput(e));
-  }
-
-  onFileInput(event) {
-    const el = event.currentTarget;
-    if (!el.files || el.files.length <= 0) return;
-
-    const [file] = el.files;
+  loadSoundFromFile(file) {
+    if (this.isLoading) return;
+    const { $filename } = this;
+    this.isLoading = true;
     const extension = file.name.split('.').pop().toLowerCase();
     const reader = new FileReader();
+    reader.addEventListener('progress', (event) => {
+      let progress = 0;
+      if (event.total && event.loaded && event.loaded > 0 && event.total > 0) {
+        progress = Math.round((event.loaded / event.total) * 100);
+      }
+      $filename.text(`Loading file: ${progress}% complete`);
+    });
     reader.addEventListener('load', () => {
+      $filename.text('Processing file...');
       const data = reader.result;
-      this.sound = new Howl({
+      this.player = new Howl({
         src: data,
         format: extension,
         onload: () => this.onSoundLoad(file),
       });
     });
-    $('.filename').text('Loading file...');
+    $filename.text('Loading file: 0% complete');
     reader.readAsDataURL(file);
   }
 
@@ -44,8 +50,9 @@ class AudioManager {
     const { sound } = this;
     const seconds = sound.duration();
     const formattedTime = this.constructor.formatSeconds(seconds);
-    $('.filename').text(file.name);
-    $('.total-time').text(formattedTime);
-    $('.current-time').text('00:00');
+    this.$filename.text(file.name);
+    this.$totalTime.text(formattedTime);
+    this.$currentTime.text('00:00');
+    this.isLoading = false;
   }
 }
