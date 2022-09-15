@@ -7,6 +7,7 @@ class App {
 
   init() {
     this.audioManager = new AudioManager();
+    this.transcriptManager = new TranscriptManager();
     this.loadListeners();
   }
 
@@ -18,8 +19,19 @@ class App {
     const el = event.currentTarget;
     if (!el.files || el.files.length <= 0) return;
 
-    const [file] = el.files;
-    console.log(file);
-    this.audioManager.loadSoundFromFile(file);
+    let foundMedia = false;
+    let foundText = false;
+    const foundBoth = _.find(el.files, (file) => {
+      const isMedia = file.type.startsWith('audio') || file.type.startsWith('video');
+      const isText = file.type.startsWith('text');
+      if (!foundMedia && isMedia) {
+        this.audioManager.loadSoundFromFile(file);
+        foundMedia = true;
+      } else if (!foundText && isText) {
+        this.transcriptManager.loadTextFromFile(file);
+        foundText = true;
+      }
+      return (foundMedia && foundText);
+    });
   }
 }
