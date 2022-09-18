@@ -1,7 +1,7 @@
 class AudioManager {
   constructor(options = {}) {
     const defaults = {
-      chunkSize: 6,
+      chunkSize: 5,
     };
     this.options = _.extend({}, defaults, options);
     this.init();
@@ -63,8 +63,8 @@ class AudioManager {
   loadSoundFromFile(file) {
     if (this.isLoading) return;
     const { $filename } = this;
+    this.audioContext = new AudioContext();
     this.isLoading = true;
-    const extension = file.name.split('.').pop().toLowerCase();
     const reader = new FileReader();
     reader.addEventListener('progress', (event) => {
       let progress = 0;
@@ -75,15 +75,15 @@ class AudioManager {
     });
     reader.addEventListener('load', () => {
       $filename.text('Processing file...');
-      const data = reader.result;
-      this.player = new Howl({
-        src: data,
-        format: extension,
-        onload: () => this.onSoundLoad(file),
+      const audioData = reader.result;
+      this.audioContext.decodeAudioData(audioData).then((buffer) => {
+        this.audioSource = this.audioContext.createBufferSource();
+        this.audioSource.buffer = buffer;
+        this.onSoundLoad(file);
       });
     });
     $filename.text('Loading file: 0% complete');
-    reader.readAsDataURL(file);
+    reader.readAsArrayBuffer(file);
   }
 
   loadUI() {
@@ -97,75 +97,38 @@ class AudioManager {
   }
 
   nextChunk() {
-    const { player } = this;
-    if (!player || this.isLoading) return;
-
-    this.currentIndex += 1;
-    if (this.currentIndex >= this.chunks) {
-      this.currentIndex = this.chunks - 1;
-      return;
-    }
-
-    Howler.stop();
-    this.currentId = this.player.play(String(this.currentIndex));
+    const { audioSource } = this;
   }
 
   onSoundLoad(file) {
-    const { player } = this;
-    const { chunkSize } = this.options;
-    const seconds = player.duration();
+    const { audioSource } = this;
+    const audioBuffer = audioSource.buffer;
+    const seconds = audioBuffer.duration;
     const formattedTime = this.constructor.formatSeconds(seconds);
     this.$filename.text(file.name);
     this.$totalTime.text(formattedTime);
     this.$currentTime.text('00:00');
-    const sprites = {};
-    let total = seconds;
-    let index = 0;
-    do {
-      const start = index * chunkSize * 1000;
-      const dur = Math.floor(Math.min(chunkSize, total) * 1000);
-      sprites[String(index)] = [start, dur];
-      index += 1;
-      total -= chunkSize;
-    } while (total > 0);
-    _.each(sprites, (sprite, key) => {
-      // eslint-disable-next-line no-underscore-dangle
-      player._sprite[key] = sprite;
-    });
-    this.chunks = index;
-    this.currentIndex = 0;
-    this.currentId = false;
     this.isLoading = false;
   }
 
   previousChunk() {
-    const { player } = this;
-    if (!player || this.isLoading) return;
+    const { audioSource } = this;
+    if (!audioSource || this.isLoading) return;
+  }
 
-    this.currentIndex -= 1;
-    if (this.currentIndex < 0) {
-      this.currentIndex = 0;
-      return;
-    }
-
-    Howler.stop();
-    this.currentId = this.player.play(String(this.currentIndex));
+  render(now) {
+    window.requestAnimationFrame((time) => this.render(time));
   }
 
   toggleAutopause() {
-    const { player } = this;
-    if (!player || this.isLoading) return;
+    const { audioSource } = this;
+    if (!audioSource || this.isLoading) return;
 
     this.isAutopause = !this.isAutopause;
   }
 
   togglePlay() {
-    const { player } = this;
-    if (!player || this.isLoading) return;
-    if (this.currentId !== false && player.playing(this.currentId)) {
-      player.stop(this.currentId);
-      return;
-    }
-    player.play(String(this.currentIndex));
+    const { audioSource } = this;
+    if (!audioSource || this.isLoading) return;
   }
 }
