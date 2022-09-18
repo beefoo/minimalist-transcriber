@@ -128,7 +128,10 @@ class AudioManager {
       index += 1;
       total -= chunkSize;
     } while (total > 0);
-    player.sprite = sprites;
+    _.each(sprites, (sprite, key) => {
+      // eslint-disable-next-line no-underscore-dangle
+      player._sprite[key] = sprite;
+    });
     this.chunks = index;
     this.currentIndex = 0;
     this.currentId = false;
@@ -159,12 +162,10 @@ class AudioManager {
   togglePlay() {
     const { player } = this;
     if (!player || this.isLoading) return;
-
     if (this.currentId !== false && player.playing(this.currentId)) {
       player.stop(this.currentId);
       return;
     }
-
     player.play(String(this.currentIndex));
   }
 }
