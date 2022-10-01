@@ -153,7 +153,7 @@ class AudioManager {
     audioSource.connect(audioContext.destination);
 
     // resume time
-    audioContext.resume();
+    if (audioContext.state !== 'running') audioContext.resume();
     const { currentTime } = audioContext;
 
     // start new audio source
@@ -210,11 +210,10 @@ class AudioManager {
       this.currentSegment = Math.min(this.currentSegment + 1, this.segmentCount - 1);
     } else {
       this.offsetTime = Math.min(this.getCurrentAudioTime() + this.skipLength, this.duration);
-    }
-
-    if (this.offsetTime >= this.duration) {
-      this.pause();
-      return;
+      if (this.offsetTime >= this.duration) {
+        this.pause();
+        return;
+      }
     }
 
     if (this.isPlaying) this.play();
