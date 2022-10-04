@@ -129,13 +129,11 @@ class AudioManager {
     if (this.offsetTime >= this.duration) this.offsetTime = 0;
     this.isPlaying = false;
 
-    const { audioSource, audioContext } = this;
-
     // stop currently playing audio
     this.stopCurrentAudioSource();
 
     // suspend time
-    audioContext.suspend();
+    this.audioContext.suspend();
 
     // update UI
     this.$togglePlay.removeClass('active');
@@ -222,21 +220,31 @@ class AudioManager {
   stopCurrentAudioSource() {
     if (!this.audioSource) return;
 
+    this.audioSource.onended = null;
     this.audioSource.stop();
     this.audioSource.disconnect(this.audioContext.destination);
+    this.audioSource = false;
   }
 
   toggleAutopause() {
-    this.$toggleAutopause.toggleClass('active');
-    this.isAutopause = this.$toggleAutopause.hasClass('active');
     const t = this.getCurrentAudioTime();
     const wasPlaying = this.isPlaying;
+
+    // update UI
+    this.$toggleAutopause.toggleClass('active');
+
+    // pause current audio
     this.pause();
+
+    // update state
+    this.isAutopause = this.$toggleAutopause.hasClass('active');
     if (this.isAutopause) {
       this.currentSegment = Math.floor(t / this.options.skipLength);
     } else {
       this.offsetTime = t;
     }
+
+    // continue playing if was playing
     if (wasPlaying) this.play();
   }
 
