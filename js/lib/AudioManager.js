@@ -1,6 +1,7 @@
 class AudioManager {
   constructor(options = {}) {
     const defaults = {
+      padSegments: 0.25,
       skipLength: 5,
     };
     this.options = _.extend({}, defaults, options);
@@ -11,6 +12,7 @@ class AudioManager {
     this.isLoading = false;
     this.$filename = $('.filename');
     this.$currentTime = $('.current-time');
+    this.$progress = $('.progress');
     this.$totalTime = $('.total-time');
     this.$toggleAutopause = $('.toggle-autopause');
     this.$togglePlay = $('.toggle-play');
@@ -36,12 +38,12 @@ class AudioManager {
   loadListeners() {
     const $doc = $(document);
 
-    this.$toggleAutopause.on('click', (e) => this.toggleAutopause());
-    this.$togglePlay.on('click', (e) => this.togglePlay());
-    $('.previous').on('click', (e) => this.skipBack());
-    $('.next').on('click', (e) => this.skipForward());
+    this.$toggleAutopause.off().on('click', (e) => this.toggleAutopause());
+    this.$togglePlay.off().on('click', (e) => this.togglePlay());
+    $('.previous').off().on('click', (e) => this.skipBack());
+    $('.next').off().on('click', (e) => this.skipForward());
 
-    $doc.on('keydown', (e) => {
+    $doc.off().on('keydown', (e) => {
       if (!e.ctrlKey) return;
       switch (e.key) {
         case 'h':
@@ -100,7 +102,7 @@ class AudioManager {
     $('.next').attr('title', newNextText);
     $('.previous .visually-hidden').text(newPrevText);
     $('.next .visually-hidden').text(newNextText);
-    this.render(Date.now());
+    this.render();
   }
 
   onAudioEnded() {
@@ -140,7 +142,7 @@ class AudioManager {
   }
 
   play() {
-    const { audioBuffer, audioContext } = this;
+    const { audioBuffer, audioContext, options } = this;
 
     // stop currently playing audio
     this.stopCurrentAudioSource();
@@ -156,8 +158,11 @@ class AudioManager {
 
     // start new audio source
     if (this.isAutopause) {
-      this.offsetTime = this.currentSegment * this.options.skipLength;
-      audioSource.start(0, this.offsetTime, this.options.skipLength);
+      this.offsetTime = this.currentSegment * options.skipLength;
+      const offset = Math.max(this.offsetTime - options.padSegments, 0);
+      const maxDur = this.duration - offset;
+      const dur = Math.min(options.skipLength + options.padSegments * 2, maxDur);
+      audioSource.start(0, offset, dur);
     } else {
       audioSource.start(0, this.offsetTime);
     }
@@ -177,44 +182,53 @@ class AudioManager {
     this.$togglePlay.addClass('active');
   }
 
-  render(now) {
-    window.requestAnimationFrame((time) => this.render(time));
+  render() {
+    window.requestAnimationFrame((time) => this.render());
 
-    if (this.isLoading || !this.isPlaying || this.playedAt === false) return;
+    if (this.isLoading || !this.isPlaying) return;
 
+    this.renderTime();
+  }
+
+  renderTime() {
     const t = this.getCurrentAudioTime();
     const formattedTime = this.constructor.formatSeconds(t);
     this.$currentTime.text(formattedTime);
+    const progress = MathUtil.clamp(t / this.duration, 0, 1);
+    this.$progress.css('transform', `scale3d(${progress}, 1, 1)`);
   }
 
   skipBack() {
-    const { audioBuffer } = this;
+    const { audioBuffer, options } = this;
     if (!audioBuffer || this.isLoading) return;
 
     if (this.isAutopause) {
       this.currentSegment = Math.max(this.currentSegment - 1, 0);
+      this.offsetTime = this.currentSegment * options.skipLength;
     } else {
-      this.offsetTime = Math.max(this.getCurrentAudioTime() - this.skipLength, 0);
+      this.offsetTime = Math.max(this.getCurrentAudioTime() - options.skipLength, 0);
     }
 
     if (this.isPlaying) this.play();
+    else this.renderTime();
   }
 
   skipForward() {
-    const { audioBuffer } = this;
+    const { audioBuffer, options } = this;
     if (!audioBuffer || this.isLoading) return;
 
     if (this.isAutopause) {
       this.currentSegment = Math.min(this.currentSegment + 1, this.segmentCount - 1);
+      this.offsetTime = this.currentSegment * options.skipLength;
     } else {
-      this.offsetTime = Math.min(this.getCurrentAudioTime() + this.skipLength, this.duration);
+      this.offsetTime = Math.min(this.getCurrentAudioTime() + options.skipLength, this.duration);
       if (this.offsetTime >= this.duration) {
         this.pause();
-        return;
       }
     }
 
     if (this.isPlaying) this.play();
+    else this.renderTime();
   }
 
   stopCurrentAudioSource() {
@@ -240,6 +254,7 @@ class AudioManager {
     this.isAutopause = this.$toggleAutopause.hasClass('active');
     if (this.isAutopause) {
       this.currentSegment = Math.floor(t / this.options.skipLength);
+      this.offsetTime = this.currentSegment * this.options.skipLength;
     } else {
       this.offsetTime = t;
     }
