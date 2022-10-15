@@ -10,6 +10,35 @@ class TranscriptManager {
   init() {
     this.isLoading = false;
     this.$textarea = $(this.options.el);
+    this.$downloadLink = $('#download-link');
+    this.loadListeners();
+  }
+
+  download() {
+    const text = this.$textarea.val().trim();
+    if (text.length <= 0) return;
+
+    const uri = `data:application/txt,${encodeURIComponent(text)}`;
+    this.$downloadLink.attr('href', uri);
+    this.$downloadLink[0].click();
+  }
+
+  loadListeners() {
+    const $doc = $(document);
+
+    $('.download').off().on('click', (e) => this.download());
+
+    $doc.off().on('keydown', (e) => {
+      if (!e.ctrlKey) return;
+      switch (e.key) {
+        case 's':
+          e.preventDefault();
+          this.download();
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   loadTextFromFile(file) {

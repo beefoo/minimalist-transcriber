@@ -47,20 +47,20 @@ class AudioManager {
       if (!e.ctrlKey) return;
       switch (e.key) {
         case 'h':
-          this.toggleAutopause();
           e.preventDefault();
+          this.toggleAutopause();
           break;
         case 'j':
-          this.skipBack();
           e.preventDefault();
+          this.skipBack();
           break;
         case 'k':
-          this.togglePlay();
           e.preventDefault();
+          this.togglePlay();
           break;
         case 'l':
-          this.skipForward();
           e.preventDefault();
+          this.skipForward();
           break;
         default:
           break;
