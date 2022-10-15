@@ -118,7 +118,7 @@ class AudioManager {
     this.$totalTime.text(formattedTime);
     this.$currentTime.text('00:00');
     this.isLoading = false;
-    this.segmentCount = Math.ceil(seconds / this.options.skipLength);
+    this.segmentCount = Math.max(Math.floor(seconds / this.options.skipLength), 1);
     this.currentSegment = 0;
     this.offsetTime = 0;
     this.playedAt = false;
@@ -161,7 +161,10 @@ class AudioManager {
       this.offsetTime = this.currentSegment * options.skipLength;
       const offset = Math.max(this.offsetTime - options.padSegments, 0);
       const maxDur = this.duration - offset;
-      const dur = Math.min(options.skipLength + options.padSegments * 2, maxDur);
+      let dur = Math.min(options.skipLength + options.padSegments * 2, maxDur);
+      if (this.currentSegment === this.segmentCount - 1) {
+        dur = this.duration - offset;
+      }
       audioSource.start(0, offset, dur);
     } else {
       audioSource.start(0, this.offsetTime);
