@@ -63,6 +63,7 @@ class TranscriptManager {
     });
     $textarea.val('Loading transcript: 0% complete');
     reader.readAsText(file);
+    this.$downloadLink.attr('download', file.name);
   }
 
   onTextChange() {
@@ -72,5 +73,6 @@ class TranscriptManager {
   onTextLoad(data) {
     const { $textarea } = this;
     $textarea.val(data);
+    $textarea.trigger('input');
   }
 }
