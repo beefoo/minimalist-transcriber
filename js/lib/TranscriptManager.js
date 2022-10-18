@@ -8,10 +8,12 @@ class TranscriptManager {
   }
 
   init() {
+    this.storage = new StorageManager();
     this.isLoading = false;
     this.$textarea = $(this.options.el);
     this.$downloadLink = $('#download-link');
     this.loadListeners();
+    this.$textarea.val(this.storage.getData());
   }
 
   download() {
@@ -39,6 +41,8 @@ class TranscriptManager {
           break;
       }
     });
+
+    this.$textarea.off().on('input propertychange', (e) => this.onTextChange());
   }
 
   loadTextFromFile(file) {
@@ -59,6 +63,10 @@ class TranscriptManager {
     });
     $textarea.val('Loading transcript: 0% complete');
     reader.readAsText(file);
+  }
+
+  onTextChange() {
+    this.storage.setData(this.$textarea.val());
   }
 
   onTextLoad(data) {
