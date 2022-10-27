@@ -2,8 +2,10 @@
   "name": "minimalist-transcriber",
   "version": "0.0.1",
   "scripts": {
+    "align": "mfa align public/audio english_us_arpa english_us_arpa public/audio",
     "lint": "./node_modules/.bin/eslint",
-    "start": "node server.js"
+    "start": "node server.js",
+    "validate": "mfa validate public/audio english_us_arpa english_us_arpa"
   },
   "dependencies": {
     "express": "^4.18.1"
