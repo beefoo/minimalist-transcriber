@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "align": "mfa align public/audio english_us_arpa english_us_arpa public/audio",
+    "gh-deploy": "git subtree push --prefix public origin docs",
     "lint": "./node_modules/.bin/eslint",
     "start": "node server.js",
     "validate": "mfa validate public/audio english_us_arpa english_us_arpa"
