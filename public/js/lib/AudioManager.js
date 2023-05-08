@@ -46,19 +46,15 @@ class AudioManager {
     $doc.off().on('keydown', (e) => {
       if (!e.ctrlKey) return;
       switch (e.key) {
-        case 'h':
-          e.preventDefault();
-          this.toggleAutopause();
-          break;
-        case 'j':
+        case 'ArrowLeft':
           e.preventDefault();
           this.skipBack();
           break;
-        case 'k':
+        case ' ':
           e.preventDefault();
           this.togglePlay();
           break;
-        case 'l':
+        case 'ArrowRight':
           e.preventDefault();
           this.skipForward();
           break;
