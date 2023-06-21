@@ -38,12 +38,12 @@ class AudioManager {
   loadListeners() {
     const $doc = $(document);
 
-    this.$toggleAutopause.off().on('click', (e) => this.toggleAutopause());
-    this.$togglePlay.off().on('click', (e) => this.togglePlay());
-    $('.previous').off().on('click', (e) => this.skipBack());
-    $('.next').off().on('click', (e) => this.skipForward());
+    this.$toggleAutopause.on('click', (e) => this.toggleAutopause());
+    this.$togglePlay.on('click', (e) => this.togglePlay());
+    $('.previous').on('click', (e) => this.skipBack());
+    $('.next').on('click', (e) => this.skipForward());
 
-    $doc.off().on('keydown', (e) => {
+    $doc.on('keyup', (e) => {
       if (!e.ctrlKey) return;
       switch (e.key) {
         case 'ArrowLeft':
