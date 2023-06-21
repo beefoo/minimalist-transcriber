@@ -28,9 +28,9 @@ class TranscriptManager {
   loadListeners() {
     const $doc = $(document);
 
-    $('.download').off().on('click', (e) => this.download());
+    $('.download').on('click', (e) => this.download());
 
-    $doc.off().on('keydown', (e) => {
+    $doc.on('keydown', (e) => {
       if (!e.ctrlKey) return;
       switch (e.key) {
         case 's':
@@ -42,7 +42,7 @@ class TranscriptManager {
       }
     });
 
-    this.$textarea.off().on('input propertychange', (e) => this.onTextChange());
+    this.$textarea.on('input propertychange', (e) => this.onTextChange());
   }
 
   loadTextFromFile(file) {

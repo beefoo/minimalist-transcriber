@@ -12,7 +12,7 @@ class App {
   }
 
   loadListeners() {
-    $('#fileinput').off().on('change', (e) => this.onFileInput(e));
+    $('#fileinput').on('change', (e) => this.onFileInput(e));
   }
 
   onFileInput(event) {
